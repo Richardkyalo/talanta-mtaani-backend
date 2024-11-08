@@ -1,9 +1,11 @@
+const { v4: uuidv4 } = require('uuid');
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+      type: DataTypes.STRING(16),  // Using a string of length 16
+      primaryKey: true,            // Make this the primary key
+      allowNull: false,
+      defaultValue: () => uuidv4().slice(0, 16), // Generate a UUID and slice it to 16 characters
     },
     username: {
       type: DataTypes.STRING(50),

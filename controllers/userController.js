@@ -1,20 +1,48 @@
 const userService = require('../services/userService');
-const { createUserSchema } = require('../schema/userSchema');
-
+const { assignRole } = require('../services/userService');
+/**
+ * Handle user creation request
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 exports.createUser = async (req, res) => {
   try {
-    // Validate request data using Zod
-    const validatedData = createUserSchema.parse(req.body);
+    const userData = req.body;
+    const result = await userService.createUser(userData);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-    // Pass validated data to the service
-    const user = await userService.createUser(validatedData);
+/**
+ * Handle user login request
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const result = await userService.authenticateUser(email, password);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-    res.status(201).json({ message: 'User created successfully', user });
-  } catch (err) {
-    if (err.name === 'ZodError') {
-      // Send Zod validation errors
-      return res.status(400).json({ errors: err.errors.map(e => e.message) });
-    }
-    res.status(500).json({ error: err.message });
+/**
+ * Handle assigning a user to the coach role
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ */
+exports.assignCoachRole = async (req, res) => {
+  const { userId } = req.body; // Get user ID to assign the role to
+
+  try {
+    // Call service to assign the 'coach' role
+    const updatedUser = await assignRole(userId, 'coach');
+    res.status(200).json({ message: 'User assigned to coach role successfully', user: updatedUser });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
