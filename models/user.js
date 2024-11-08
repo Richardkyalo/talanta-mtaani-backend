@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    user_id: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -25,11 +25,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     created_at: {
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      defaultValue: DataTypes.NOW, // Default value for created_at
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW, // Default value for updated_at
     },
   }, {
     tableName: 'Users',
-    timestamps: false, // Disable automatic timestamp columns
+    timestamps: true, // Enable Sequelize's automatic timestamp columns (createdAt and updatedAt)
+    underscored: true, // Use snake_case for column names (e.g., `created_at`, `updated_at`)
   });
 
   return User;
