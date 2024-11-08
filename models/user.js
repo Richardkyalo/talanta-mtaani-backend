@@ -23,18 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW, // Default value for created_at
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW, // Default value for updated_at
-    },
   }, {
     tableName: 'Users',
-    timestamps: true, // Enable Sequelize's automatic timestamp columns (createdAt and updatedAt)
-    underscored: true, // Use snake_case for column names (e.g., `created_at`, `updated_at`)
+    timestamps: true, // Enable automatic timestamps for created_at and updated_at
+    createdAt: 'created_at', // Specify column name for createdAt
+    updatedAt: 'updated_at', // Specify column name for updatedAt
   });
 
   return User;
