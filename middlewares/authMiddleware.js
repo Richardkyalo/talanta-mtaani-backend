@@ -46,3 +46,21 @@ exports.isAdmin = async (req, res, next) => {
       return res.status(500).json({ message: 'Error verifying token' });
     }
   };
+  exports.isCoach = async (req, res, next) => {
+    try {
+      // Check if user has the role "coach"
+      const user = await User.findOne({ where: { id: req.user.id } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      if (user.role !== 'coach') {
+        return res.status(403).json({ message: 'Access denied: Coaches only' });
+      }
+  
+      req.user = user;  // Attach user data to request
+      next();
+    } catch (error) {
+      return res.status(500).json({ message: 'Error verifying user role' });
+    }
+  };
